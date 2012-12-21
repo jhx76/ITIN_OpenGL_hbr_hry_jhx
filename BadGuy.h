@@ -14,7 +14,6 @@ public:
 	virtual void draw ();
 	bool isOutOfGame(sf::Window& pWindow) { return this->mNode->isOutOfGame(pWindow); }
 
-
 	float mLife;
 	bool isAlive();
 };

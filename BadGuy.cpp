@@ -8,6 +8,7 @@ BadGuy::BadGuy() : Element3D()
 BadGuy::BadGuy(float life) : Element3D()
 {
 	mLife = life;
+	mVitesse.x = -100;
 }
 
 void BadGuy::draw()

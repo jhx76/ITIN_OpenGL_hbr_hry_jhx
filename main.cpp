@@ -25,7 +25,6 @@ static bool isContact (Node3D& pElem1, Node3D& pElem2, float threshold)
 	double distXY = distX + distY;
 
 	return (distXY < (threshold * threshold));
-
 }
 
 
@@ -153,6 +152,9 @@ int main()
 		if( App.GetInput().IsKeyDown( sf::Key::Space ) )
 		{
 			Tir* tmpTir = new Tir();
+			tmpTir->mNode->mPosition_ParentSpace.x = lPlayer->mNode->mPosition_ParentSpace.x;
+			tmpTir->mNode->mPosition_ParentSpace.y = lPlayer->mNode->mPosition_ParentSpace.y;
+			tmpTir->mNode->mPosition_ParentSpace.z = lPlayer->mNode->mPosition_ParentSpace.z;
 			ListMissile->push_back(tmpTir);
 		}
 
@@ -170,9 +172,11 @@ int main()
 		if(lLastEnnemyCreation<lTotalTime_s+1)
 		{
 			lLastEnnemyCreation	= lTotalTime_s;
-			ListBadGuy->push_back(new BadGuy());
+			BadGuy* badGuy = new BadGuy(100);
+			badGuy->mNode->mPosition_ParentSpace.y = std::rand()%App.GetHeight();
+			badGuy->mNode->mPosition_ParentSpace.x = App.GetWidth();
+			ListBadGuy->push_back(badGuy);
 		}
-
 
 		//MAJ position tirs
 		for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); )
@@ -278,8 +282,6 @@ int main()
 		ListBadGuy->pop_back();
 	}
 	delete ListBadGuy;
-
-
 
 	return EXIT_SUCCESS;
 }
