@@ -17,11 +17,8 @@ void Tir::draw()
 	glMatrixMode(GL_MODELVIEW);
 	auto lNewMatrix =  lBeginMatrix* mNode->getTransformation_ParentSpace();
 	glLoadMatrixf( &lNewMatrix[0][0]);
-	//AppelsOpenGL::dessinerPyramide();
 	//AppelsOpenGL::dessinerTir();
 	glLoadMatrixf( &lBeginMatrix[0][0]);
-
-
 }
 
 /*

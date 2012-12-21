@@ -1,6 +1,8 @@
 #ifndef BADGUY_H
 #define BADGUY_H
 #include "Element3D.h"
+#include "Node3D.h"
+#include "AppelsOpenGL.h"
 
 
 class BadGuy : public Element3D
@@ -15,7 +17,6 @@ public:
 
 	float mLife;
 	bool isAlive();
-
 };
 
 

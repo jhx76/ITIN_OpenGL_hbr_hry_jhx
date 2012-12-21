@@ -166,8 +166,9 @@ int main()
 
 		// TODO : chaque seconde on cree un nouvel ennemi
 
+
+
 		//MAJ position tirs
-		{
 		for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); )
 		{
 			(*lTir)->update( App.GetFrameTime() );
@@ -179,7 +180,6 @@ int main()
 			{
 				++lTir;
 			}
-		}
 		}
 
 		//-- TODO MAJ position ennemis
@@ -193,8 +193,6 @@ int main()
 		}
 
 		// -- TODO TEST collisions
-		{
-		}
 
 		//--------------------dessin opengl------------------------------//
 
