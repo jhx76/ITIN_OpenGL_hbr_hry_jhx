@@ -2,6 +2,7 @@
 #define ELEMENT3D_H
 
 #include <glm/glm.hpp>
+#include <cmath>
 
 class Node3D;
 
@@ -11,12 +12,13 @@ public:
 	/// en parametre : la node sur laquelle l'element 
 	/// doit s'accrocher
 	Element3D();
+	float collideDistance;
 
 	/// ce destructeur
 	virtual ~Element3D();
 	virtual void draw();
 	virtual void update(float dt);
-
+	bool collide(Element3D *p_elt);
 	/// vitesse de notre element 3D.
 	glm::vec3 mVitesse;
 
