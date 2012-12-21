@@ -175,6 +175,7 @@ int main()
 			if((*lTir)->isOutOfGame(App))
 			{
 				lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
+												// Si c'est pas le cas, possible fuite mémoire !	
 			}
 			else
 			{
@@ -193,6 +194,32 @@ int main()
 		}
 
 		// -- TODO TEST collisions
+		for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); ) {
+			Node3D* nodeTir = (*lTir)->mNode;
+			for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); ) {
+				Node3D* nodeBadGuy = (*lBadGuy)->mNode;
+				//Test de collision:
+				// SI ( les "x" des deux objets se rencontre )
+				// ET ( les deux objets sont alignés sur l'axe des y)
+				// ET ( on compare l'axe Z ???? )
+				if( nodeTir->mPosition_ParentSpace.x >= nodeBadGuy->mPosition_ParentSpace.x 
+				 && nodeTir->mPosition_ParentSpace.y == nodeBadGuy->mPosition_ParentSpace.y 
+				 && nodeTir->mPosition_ParentSpace.z == nodeBadGuy->mPosition_ParentSpace.z) //??
+				{
+					//Les deux objets se sont rencontrés, reste maintenant a supprimer le tir et enlever les pv
+					// + test des pv apres avoir décrémenté
+					lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
+													 // Si c'est pas le cas, possible fuite mémoire !	
+
+					(*lBadGuy)->mLife -= 1; // lors de la collision, on decrement la vie du bad guy !
+					if( !(*lBadGuy)->isAlive() )
+						lBadGuy = ListBadGuy->erase(lBadGuy); //meme interrogation sur la gestion memoire du bad guy a supprimer!
+				}
+				lBadGuy++;
+			}
+			lTir++;
+		}
+
 
 		//--------------------dessin opengl------------------------------//
 
@@ -206,7 +233,8 @@ int main()
 		glLoadMatrixf( &lPointOfView[0][0] );
 		
 		// TODO dessin du fond.
-		
+		//GERER LES ARGUMENTS !!!!
+//		AppelsOpenGL::drawBackground();
 		
 		// dessinons notre objet.
 		lPlayer->draw();
