@@ -6,13 +6,16 @@
 class BadGuy : public Element3D
 {
 
-	public:
+public:
 	BadGuy();
 	BadGuy(float life);
 	virtual void draw ();
+	bool isOutOfGame(sf::Window& pWindow) { return this->mNode->isOutOfGame(pWindow); }
+
 
 	float mLife;
 	bool isAlive();
+
 };
 
 

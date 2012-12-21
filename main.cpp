@@ -87,7 +87,12 @@ int main()
 	// creation de mes elements de la scene.
 	Element3D *lPlayer = new Element3D();
 	lPlayer->mNode->mPosition_ParentSpace.x = -6.0f;
+
+	//Creation du conteneur pour les elements Tir
 	std::vector<Tir*> *ListMissile = new std::vector<Tir*>();
+
+	//Creation du conteneur pour les elements BadGuy
+	std::vector<BadGuy*> *ListBadGuy = new std::vector<BadGuy*>();
 
 	// pour connaitre le temps total
 	sf::Clock lClock;
@@ -178,7 +183,13 @@ int main()
 		}
 
 		//-- TODO MAJ position ennemis
+		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); )
 		{
+			(*lBadGuy)->update(App.GetFrameTime());
+			if( (*lBadGuy)->isOutOfGame(App) )
+				lBadGuy = ListBadGuy->erase(lBadGuy);
+			else
+				++lBadGuy;
 		}
 
 		// -- TODO TEST collisions
@@ -209,6 +220,8 @@ int main()
 		}
 		
 		// TODO dessiner les ennemis
+		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); )
+			(*lBadGuy)->draw();
 		
 		
 		// attend que la carte graphique ait termine.
@@ -217,11 +230,22 @@ int main()
 		App.Display();
 	}
 
+
+
 	// TODO nettoyer la memoire.
+	//nettoie et supprime le conteneur pour les elements Tir
 	while(ListMissile->size() > 0) {
 		ListMissile->pop_back(); //pop_back() appelle aussi le destructeur de l'element a supprimer !
 	}
 	delete ListMissile;
+
+	//nettoie et supprime le conteneur pour les elements BadGuy
+	while(ListBadGuy->size() > 0) {
+		ListBadGuy->pop_back();
+	}
+	delete ListBadGuy;
+
+
 
 	return EXIT_SUCCESS;
 }
