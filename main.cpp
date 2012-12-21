@@ -100,8 +100,9 @@ int main()
 	// Start game loop
 	while (App.IsOpened())
 	{
-		float lTotalTime_s = lClock.GetElapsedTime();
-		float lTimeSinceLastFrame_s = App.GetFrameTime();
+		float lLastEnnemyCreation	=	0;
+		float lTotalTime_s			=	lClock.GetElapsedTime();
+		float lTimeSinceLastFrame_s =	App.GetFrameTime();
 		// Process events
 		sf::Event Event;
 		while (App.GetEvent(Event))
@@ -165,7 +166,11 @@ int main()
 		lPlayer->update(lTimeSinceLastFrame_s);
 
 		// TODO : chaque seconde on cree un nouvel ennemi
-
+		if(lLastEnnemyCreation<lTotalTime_s+1)
+		{
+			lLastEnnemyCreation	=	lTotalTime_s;
+			ListBadGuy->push_back(new BadGuy());
+		}
 
 
 		//MAJ position tirs
