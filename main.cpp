@@ -87,6 +87,7 @@ int main()
 	// creation de mes elements de la scene.
 	Element3D *lPlayer = new Element3D();
 	lPlayer->mNode->mPosition_ParentSpace.x = -6.0f;
+	
 
 	//Creation du conteneur pour les elements Tir
 	std::vector<Tir*> *ListMissile = new std::vector<Tir*>();
@@ -168,7 +169,7 @@ int main()
 		// TODO : chaque seconde on cree un nouvel ennemi
 		if(lLastEnnemyCreation<lTotalTime_s+1)
 		{
-			lLastEnnemyCreation	=	lTotalTime_s;
+			lLastEnnemyCreation	= lTotalTime_s;
 			ListBadGuy->push_back(new BadGuy());
 		}
 
@@ -207,9 +208,11 @@ int main()
 				// SI ( les "x" des deux objets se rencontre )
 				// ET ( les deux objets sont alignés sur l'axe des y)
 				// ET ( on compare l'axe Z ???? )
-				if( nodeTir->mPosition_ParentSpace.x >= nodeBadGuy->mPosition_ParentSpace.x 
+				// On appelle collidePoint()
+				/*if( nodeTir->mPosition_ParentSpace.x >= nodeBadGuy->mPosition_ParentSpace.x 
 				 && nodeTir->mPosition_ParentSpace.y == nodeBadGuy->mPosition_ParentSpace.y 
-				 && nodeTir->mPosition_ParentSpace.z == nodeBadGuy->mPosition_ParentSpace.z) //??
+				 && nodeTir->mPosition_ParentSpace.z == nodeBadGuy->mPosition_ParentSpace.z) //??*/
+				if( (*lBadGuy)->collide((*lTir)) ) 
 				{
 					//Les deux objets se sont rencontrés, reste maintenant a supprimer le tir et enlever les pv
 					// + test des pv apres avoir décrémenté
