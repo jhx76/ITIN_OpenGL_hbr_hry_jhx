@@ -209,6 +209,7 @@ int main()
 			(*lTir)->update( App.GetFrameTime() );
 			if((*lTir)->isOutOfGame(App))
 			{
+				std::cout<<"Suppression d'un tir car hors de l'écran"<<std::endl;
 				lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
 												// Si c'est pas le cas, possible fuite mémoire !	
 			}
