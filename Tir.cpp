@@ -22,6 +22,7 @@ void Tir::draw()
 	vecDessin.x = mNode->mPosition_ParentSpace.x;
 	vecDessin.y = mNode->mPosition_ParentSpace.y;
 	vecDessin.z = mNode->mPosition_ParentSpace.z;
+	//AppelsOpenGL::dessinerTir(vecDessin);
 	AppelsOpenGL::dessinerTir(vecDessin);
 	glLoadMatrixf( &lBeginMatrix[0][0]);
 }
