@@ -33,9 +33,9 @@ static bool isContact (Element3D& pElem1, Element3D& pElem2, float threshold)
 	isContact(*(pElem1.mNode), *(pElem2.mNode), threshold);
 }
 
-
 int main()
 {	
+
 	// Create the main window
 	std::string lTitre("SFML OpenGL");
 	sf::Window App(sf::VideoMode(800, 600, 32), lTitre);
@@ -105,11 +105,13 @@ int main()
 	float lLastEnnemyCreation	=	0;
 	float lTotalTime_s			=	lClock.GetElapsedTime();
 	float lTimeSinceLastFrame_s =	App.GetFrameTime();
+	float speedModificator		=	1;
 	// Start game loop
 	while (App.IsOpened())
 	{
 		lTotalTime_s			=	lClock.GetElapsedTime();
 		lTimeSinceLastFrame_s	=	App.GetFrameTime();
+		lTimeSinceLastFrame_s	=	lTimeSinceLastFrame_s * speedModificator;
 		// Process events
 		sf::Event Event;
 		while (App.GetEvent(Event))
@@ -126,6 +128,20 @@ int main()
 				App.Close();
 			}
 
+			if ((Event.Type == sf::Event::KeyPressed) && (Event.Key.Code == sf::Key::Add))
+			{
+				speedModificator	+=	0.1;
+				std::cout<<"Increasing game speed..."<<std::endl;
+				std::cout<<"Game is now speed: "<<speedModificator<<std::endl;
+			}
+
+			if ((Event.Type == sf::Event::KeyPressed) && (Event.Key.Code == sf::Key::Subtract))
+			{
+				speedModificator	-=	0.1;
+				std::cout<<"Decreasing game speed..."<<std::endl;
+				std::cout<<"Game is now speed: "<<speedModificator<<std::endl;
+			}
+
 			// Retaillage de la fenetre
 			if (Event.Type == sf::Event::Resized)
 			{
@@ -136,6 +152,7 @@ int main()
 			if ((Event.Type == sf::Event::KeyPressed) && (Event.Key.Code == sf::Key::Space))
 			{
 				// TODO : ajouter un tir.
+				std::cout<<"Nouveau tir"<<std::endl;
 				Tir* tmpTir = new Tir();
 				tmpTir->mNode->mPosition_ParentSpace.x = lPlayer->mNode->mPosition_ParentSpace.x;
 				tmpTir->mNode->mPosition_ParentSpace.y = lPlayer->mNode->mPosition_ParentSpace.y;
@@ -178,8 +195,7 @@ int main()
 		// TODO : chaque seconde on cree un nouvel ennemi
 		if(lLastEnnemyCreation+1 < lTotalTime_s)
 		{
-			std::cout<<"Creation d'un ennemi"<<std::endl;
-			std::cout<<"Last time: "<<lLastEnnemyCreation<<" next time " <<lTotalTime_s+1<<std::endl;
+			std::cout<<"INCOMING BadGuy!!"<<std::endl;
 			lLastEnnemyCreation	= lTotalTime_s;
 			BadGuy* badGuy		= new BadGuy(100);
 			badGuy->mNode->mPosition_ParentSpace.y = std::rand()%App.GetHeight();
@@ -255,7 +271,7 @@ int main()
 			bool badGuyIsDead = false;
 			for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); ) {
 				Node3D* nodeTir = (*lTir)->mNode;
-				if(isContact(*nodeTir, *nodeBadGuy, 50)) {
+				if(isContact(*nodeTir, *nodeBadGuy, 0.5f)) {
 					
 					lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
 													 // Si c'est pas le cas, possible fuite mémoire !
@@ -329,6 +345,6 @@ int main()
 	delete ListBadGuy;
 
 	delete lPlayer;
-
+	std::cout<<"Temps de jeu: "<<lTotalTime_s<<std::endl;
 	return EXIT_SUCCESS;
 }
