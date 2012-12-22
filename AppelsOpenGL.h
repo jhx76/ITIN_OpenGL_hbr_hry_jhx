@@ -40,7 +40,7 @@ public:
 	/// en entree: si vous voulez vous pouvez passer des parametres supplementaires
 	/// pour faire un dessin plus joli (ex: utiliser la position comme parametre de la couleur etc..)
 	/// mais vous n'etes pas oblige de les utiliser.
-	static void dessinerTir(glm::vec4 parametresQuelconques);
+	static void dessinerTir(/*glm::vec4 parametresQuelconques*/);
 
 
 	/// EXO OpenGL 3

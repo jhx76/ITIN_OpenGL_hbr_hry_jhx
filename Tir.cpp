@@ -3,6 +3,7 @@
 
 Tir::Tir() : Element3D() 
 { 
+	mVitesse.x = 1.8f;
 	/* nothing todo*/
 }
 
@@ -17,13 +18,11 @@ void Tir::draw()
 	glMatrixMode(GL_MODELVIEW);
 	auto lNewMatrix =  lBeginMatrix* mNode->getTransformation_ParentSpace();
 	glLoadMatrixf( &lNewMatrix[0][0]);
-
-	glm::vec4 vecDessin;
+	/*glm::vec4 vecDessin;
 	vecDessin.x = mNode->mPosition_ParentSpace.x;
 	vecDessin.y = mNode->mPosition_ParentSpace.y;
-	vecDessin.z = mNode->mPosition_ParentSpace.z;
-	AppelsOpenGL::dessinerTir(vecDessin);
-
+	vecDessin.z = mNode->mPosition_ParentSpace.z;*/
+	AppelsOpenGL::dessinerTir(/*vecDessin*/);
 	glLoadMatrixf( &lBeginMatrix[0][0]);
 }
 

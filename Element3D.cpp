@@ -41,7 +41,7 @@ void Element3D::update(float dt)
 	mNode->mRotationXYZ_ParentSpace +=(mVitesseRotation *dt);
 }
 //--------------------------------------//
-
+/*
 bool Element3D::collide(Element3D *p_Elt)
 {
 	bool collide;
@@ -51,4 +51,4 @@ bool Element3D::collide(Element3D *p_Elt)
 	z	=	mNode->mPosition_ParentSpace.z - p_Elt->mNode->mPosition_ParentSpace.z;
 	return std::sqrtf(x*x + y*y + z*z) <= collideDistance;
 
-}
+}*/

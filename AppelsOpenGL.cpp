@@ -80,10 +80,17 @@ void AppelsOpenGL::dessinerPyramide()
 }
 
 //------------------------------------------------------------------//
-void AppelsOpenGL::dessinerTir(glm::vec4 parametresQuelconques)
+void AppelsOpenGL::dessinerTir(/*glm::vec4 parametresQuelconques*/)
 {
 	//TODO
-	
+	glBegin(GL_QUADS);
+           glColor3ub(255,255,255);
+           glVertex2d(-3.0f,-3.0f);
+           glVertex2d(-3.0f,3.0f);
+           //glColor3ub(255,255,255);
+           glVertex2d(3.0f,3.0f);
+           glVertex2d(3.0f,-3.0f);
+       glEnd();
 }
 //------------------------------------------------------------------//
 void AppelsOpenGL::dessinerTriangleInfini()
