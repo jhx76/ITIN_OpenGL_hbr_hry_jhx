@@ -8,7 +8,7 @@ BadGuy::BadGuy() : Element3D()
 BadGuy::BadGuy(float life) : Element3D()
 {
 	mLife = life;
-	mVitesse.x = -100;
+	mVitesse.x = -1.8f;
 }
 
 void BadGuy::draw()
@@ -22,8 +22,8 @@ void BadGuy::draw()
 	glMatrixMode(GL_MODELVIEW);
 	auto lNewMatrix =  lBeginMatrix* mNode->getTransformation_ParentSpace();
 	glLoadMatrixf( &lNewMatrix[0][0]);
-	//AppelsOpenGL::dessinerTir();
-	AppelsOpenGL::dessinerEnnemi();
+	//AppelsOpenGL::dessinerEnnemi();
+	AppelsOpenGL::dessinerPyramide();
 	glLoadMatrixf( &lBeginMatrix[0][0]);
 }
 

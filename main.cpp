@@ -35,7 +35,6 @@ static bool isContact (Element3D& pElem1, Element3D& pElem2, float threshold)
 
 int main()
 {	
-
 	// Create the main window
 	std::string lTitre("SFML OpenGL");
 	sf::Window App(sf::VideoMode(800, 600, 32), lTitre);
@@ -117,8 +116,7 @@ int main()
 		while (App.GetEvent(Event))
 		{
 			// Close window : exit
-			if (Event.Type == sf::Event::Closed)
-			{
+			if (Event.Type == sf::Event::Closed) {
 				App.Close();
 			}
 
@@ -130,7 +128,7 @@ int main()
 
 			if ((Event.Type == sf::Event::KeyPressed) && (Event.Key.Code == sf::Key::Add))
 			{
-				speedModificator	+=	0.1;
+				speedModificator	+=	0.1f;
 				std::cout<<"Increasing game speed..."<<std::endl;
 				std::cout<<"Game is now speed: "<<speedModificator<<std::endl;
 			}
@@ -162,8 +160,7 @@ int main()
 		}
 
 		// si j'appuie sur la touche haut
-		if( App.GetInput().IsKeyDown( sf::Key::Up ) )
-		{
+		if( App.GetInput().IsKeyDown( sf::Key::Up ) ) {
 			lPlayer->mNode->mPosition_ParentSpace.y += 1.8f * lTimeSinceLastFrame_s;
 		}
 
@@ -195,11 +192,17 @@ int main()
 		// TODO : chaque seconde on cree un nouvel ennemi
 		if(lLastEnnemyCreation+1 < lTotalTime_s)
 		{
-			std::cout<<"INCOMING BadGuy!!"<<std::endl;
+			
 			lLastEnnemyCreation	= lTotalTime_s;
 			BadGuy* badGuy		= new BadGuy(100);
-			badGuy->mNode->mPosition_ParentSpace.y = std::rand()%App.GetHeight();
-			badGuy->mNode->mPosition_ParentSpace.x = App.GetWidth();
+			int nb_aleatoire = (rand()%100)+1; 
+			int t = (nb_aleatoire * 12 / 100) - 6;
+
+			badGuy->mNode->mPosition_ParentSpace.y = t;//std::rand()%App.GetHeight();
+
+
+			std::cout<<"INCOMING BadGuy!! ( " <<badGuy->mNode->mPosition_ParentSpace.x<<"; "<<badGuy->mNode->mPosition_ParentSpace.y<<")"<<std::endl; 
+			badGuy->mNode->mPosition_ParentSpace.x = App.GetWidth() - 1.0f;
 			ListBadGuy->push_back(badGuy);
 		}
 
@@ -210,8 +213,11 @@ int main()
 			if((*lTir)->isOutOfGame(App))
 			{
 				std::cout<<"Suppression d'un tir car hors de l'écran"<<std::endl;
+				Tir* ptrTir = *lTir;
 				lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
 												// Si c'est pas le cas, possible fuite mémoire !	
+				if(ptrTir)
+					delete ptrTir;
 			}
 			else
 			{
@@ -223,14 +229,19 @@ int main()
 		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); )
 		{
 			(*lBadGuy)->update(App.GetFrameTime());
-			if( (*lBadGuy)->isOutOfGame(App) )
+			if( (*lBadGuy)->isOutOfGame(App) ) 
+			{
+				BadGuy* ptrBadGuy = *lBadGuy;
 				lBadGuy = ListBadGuy->erase(lBadGuy);
+				if(ptrBadGuy) 
+					delete ptrBadGuy;
+			}
 			else
 				++lBadGuy;
 		}
 
 		// -- TODO TEST collisions
-		for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); ) {
+		/*for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); ) {
 			bool collision = false;
 			Node3D* nodeTir = (*lTir)->mNode;
 			for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); ) {
@@ -257,14 +268,17 @@ int main()
 			}
 			if(!collision) //S'il n'y a pas eu de collision, test un autre tir
 				lTir++;
-		}
+		}*/
 
 		for (auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); ) {
 			
 			Node3D* nodeBadGuy = (*lBadGuy)->mNode;
 			//Test de collison : Player / BadGuy
 			if(isContact(*nodeBadGuy, *(lPlayer->mNode), 50)) {
+				BadGuy* ptrBadGuy = *lBadGuy;
 				lBadGuy = ListBadGuy->erase(lBadGuy);
+				if(ptrBadGuy)
+					delete ptrBadGuy;
 				continue;
 			}
 
@@ -274,11 +288,17 @@ int main()
 				Node3D* nodeTir = (*lTir)->mNode;
 				if(isContact(*nodeTir, *nodeBadGuy, 0.5f)) {
 					
+					Tir* ptrTir = *lTir;
 					lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
 													 // Si c'est pas le cas, possible fuite mémoire !
+					if(ptrTir)
+						delete ptrTir;
 					(*lBadGuy)->mLife -= 1; // lors de la collision, on decrement la vie du bad guy !
 					if( !(*lBadGuy)->isAlive() ) {
-						lBadGuy = ListBadGuy->erase(lBadGuy); //meme interrogation sur la gestion memoire du bad guy a supprimer!
+						BadGuy* ptrBadGuy = *lBadGuy;
+						lBadGuy = ListBadGuy->erase(lBadGuy);
+						if(ptrBadGuy)
+							delete ptrBadGuy;
 						badGuyIsDead = true; //Permet de ne pas incrementer l'iterateur de ListTir car l'objet a été supprimé 
 							          //et l'itérateur déja décalé avec l'appel de erase()
 						break; //On sort du parcours de ListMissile
