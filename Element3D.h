@@ -18,6 +18,11 @@ public:
 	virtual ~Element3D();
 	virtual void draw();
 	virtual void update(float dt);
+
+	/*
+	jhx: Méthode pas nécessaire parce que le prof avait déja donné une fonction
+	     qui permet de tester les collisions
+	*/
 	bool collide(Element3D *p_elt);
 	/// vitesse de notre element 3D.
 	glm::vec3 mVitesse;

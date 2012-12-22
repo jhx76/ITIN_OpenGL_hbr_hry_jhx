@@ -27,6 +27,12 @@ static bool isContact (Node3D& pElem1, Node3D& pElem2, float threshold)
 	return (distXY < (threshold * threshold));
 }
 
+//Surcharge pour pouvoir passer en argument les Element3D (et classes qui en héritent)
+static bool isContact (Element3D& pElem1, Element3D& pElem2, float threshold)
+{
+	isContact(*(pElem1.mNode), *(pElem2.mNode), threshold);
+}
+
 
 int main()
 {	
@@ -126,15 +132,15 @@ int main()
 				glViewport(0, 0, Event.Size.Width, Event.Size.Height);
 			}
 
-			/*
 			if ((Event.Type == sf::Event::KeyPressed) && (Event.Key.Code == sf::Key::Space))
 			{
 				// TODO : ajouter un tir.
 				Tir* tmpTir = new Tir();
-				ListMissile.push_back(tmpTir);
-				//ListMissile.push_back(&Tir());
+				tmpTir->mNode->mPosition_ParentSpace.x = lPlayer->mNode->mPosition_ParentSpace.x;
+				tmpTir->mNode->mPosition_ParentSpace.y = lPlayer->mNode->mPosition_ParentSpace.y;
+				tmpTir->mNode->mPosition_ParentSpace.z = lPlayer->mNode->mPosition_ParentSpace.z;
+				ListMissile->push_back(tmpTir);
 			}
-			*/
 		}
 
 		// si j'appuie sur la touche haut
@@ -205,31 +211,63 @@ int main()
 
 		// -- TODO TEST collisions
 		for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); ) {
+			bool collision = false;
 			Node3D* nodeTir = (*lTir)->mNode;
 			for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); ) {
 				Node3D* nodeBadGuy = (*lBadGuy)->mNode;
-				//Test de collision:
-				// SI ( les "x" des deux objets se rencontre )
-				// ET ( les deux objets sont alignés sur l'axe des y)
-				// ET ( on compare l'axe Z ???? )
-				// On appelle collidePoint()
-				/*if( nodeTir->mPosition_ParentSpace.x >= nodeBadGuy->mPosition_ParentSpace.x 
-				 && nodeTir->mPosition_ParentSpace.y == nodeBadGuy->mPosition_ParentSpace.y 
-				 && nodeTir->mPosition_ParentSpace.z == nodeBadGuy->mPosition_ParentSpace.z) //??*/
-				if( (*lBadGuy)->collide((*lTir)) ) 
-				{
-					//Les deux objets se sont rencontrés, reste maintenant a supprimer le tir et enlever les pv
-					// + test des pv apres avoir décrémenté
+				
+				
+				
+				//Test de collision: Tir / BadGuy
+				//Les deux objets se sont rencontrés, reste maintenant a supprimer le tir et enlever les pv
+				// + test des pv apres avoir décrémenté
+				if(isContact(*nodeTir, *nodeBadGuy, 50)) {
+					collision = true; //Permet de ne pas incrementer l'iterateur de ListTir car l'objet a été supprimé 
+							          //et l'itérateur déja décalé avec l'appel de erase()
 					lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
 													 // Si c'est pas le cas, possible fuite mémoire !	
-
 					(*lBadGuy)->mLife -= 1; // lors de la collision, on decrement la vie du bad guy !
-					if( !(*lBadGuy)->isAlive() )
+					if( !(*lBadGuy)->isAlive() ) {
 						lBadGuy = ListBadGuy->erase(lBadGuy); //meme interrogation sur la gestion memoire du bad guy a supprimer!
+						break; //On sort du parcours de ListBadGuy
+					}
 				}
+
 				lBadGuy++;
 			}
-			lTir++;
+			if(!collision) //S'il n'y a pas eu de collision, test un autre tir
+				lTir++;
+		}
+
+		for (auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); ) {
+			
+			Node3D* nodeBadGuy = (*lBadGuy)->mNode;
+			//Test de collison : Player / BadGuy
+			if(isContact(*nodeBadGuy, *(lPlayer->mNode), 50)) {
+				lBadGuy = ListBadGuy->erase(lBadGuy);
+				continue;
+			}
+
+			//Test de collison : Tir / BadGuy
+			bool badGuyIsDead = false;
+			for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); ) {
+				Node3D* nodeTir = (*lTir)->mNode;
+				if(isContact(*nodeTir, *nodeBadGuy, 50)) {
+					
+					lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
+													 // Si c'est pas le cas, possible fuite mémoire !
+					(*lBadGuy)->mLife -= 1; // lors de la collision, on decrement la vie du bad guy !
+					if( !(*lBadGuy)->isAlive() ) {
+						lBadGuy = ListBadGuy->erase(lBadGuy); //meme interrogation sur la gestion memoire du bad guy a supprimer!
+						badGuyIsDead = true; //Permet de ne pas incrementer l'iterateur de ListTir car l'objet a été supprimé 
+							          //et l'itérateur déja décalé avec l'appel de erase()
+						break; //On sort du parcours de ListMissile
+					}
+				}
+				lTir++;
+			}
+			if(!badGuyIsDead) //Si on a deja supprimé le badGuy de la liste, pas besoin de décalé l'itérateur
+				lBadGuy++;    // car l'itérateur a deja été réaffecté par "lBadGuy = ListBadGuy->erase(lBadGuy);"
 		}
 
 
@@ -254,14 +292,17 @@ int main()
 		// TODO dessiner les tirs
 		for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); )
 		{
-			(*lTir)->draw();
+			(*lTir)->draw(); // dessin de l'element
+			lTir++; //décalage de l'itérateur
 		}
 		
 		// TODO dessiner les ennemis
-		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); )//Condition de sortie jamais rencontrée
+		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); )
 		{
-			(*lBadGuy)->draw();
+			(*lBadGuy)->draw(); //dessin de l'element
+			lBadGuy++; //décallage de l'itérateur
 		}
+		
 		
 		// attend que la carte graphique ait termine.
 		glFlush();
@@ -283,6 +324,8 @@ int main()
 		ListBadGuy->pop_back();
 	}
 	delete ListBadGuy;
+
+	delete lPlayer;
 
 	return EXIT_SUCCESS;
 }
