@@ -258,9 +258,10 @@ int main()
 		}
 		
 		// TODO dessiner les ennemis
-		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); )
+		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); )//Condition de sortie jamais rencontrée
+		{
 			(*lBadGuy)->draw();
-		
+		}
 		
 		// attend que la carte graphique ait termine.
 		glFlush();
