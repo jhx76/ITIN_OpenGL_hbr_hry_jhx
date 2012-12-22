@@ -102,13 +102,14 @@ int main()
 
 	// pour connaitre le temps total
 	sf::Clock lClock;
-
+	float lLastEnnemyCreation	=	0;
+	float lTotalTime_s			=	lClock.GetElapsedTime();
+	float lTimeSinceLastFrame_s =	App.GetFrameTime();
 	// Start game loop
 	while (App.IsOpened())
 	{
-		float lLastEnnemyCreation	=	0;
-		float lTotalTime_s			=	lClock.GetElapsedTime();
-		float lTimeSinceLastFrame_s =	App.GetFrameTime();
+		lTotalTime_s			=	lClock.GetElapsedTime();
+		lTimeSinceLastFrame_s	=	App.GetFrameTime();
 		// Process events
 		sf::Event Event;
 		while (App.GetEvent(Event))
@@ -175,10 +176,12 @@ int main()
 		lPlayer->update(lTimeSinceLastFrame_s);
 
 		// TODO : chaque seconde on cree un nouvel ennemi
-		if(lLastEnnemyCreation<lTotalTime_s+1)
+		if(lLastEnnemyCreation+1 < lTotalTime_s)
 		{
+			std::cout<<"Creation d'un ennemi"<<std::endl;
+			std::cout<<"Last time: "<<lLastEnnemyCreation<<" next time " <<lTotalTime_s+1<<std::endl;
 			lLastEnnemyCreation	= lTotalTime_s;
-			BadGuy* badGuy = new BadGuy(100);
+			BadGuy* badGuy		= new BadGuy(100);
 			badGuy->mNode->mPosition_ParentSpace.y = std::rand()%App.GetHeight();
 			badGuy->mNode->mPosition_ParentSpace.x = App.GetWidth();
 			ListBadGuy->push_back(badGuy);
