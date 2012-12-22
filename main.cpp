@@ -11,7 +11,7 @@
 // si vous avez des problemes de linker avec glewinit :
 // error LNK2019: symbole externe non résolu __imp__glewInit référencé dans la fonction _main
 // alors commentez/décommentez cette ligne.
-#pragma comment(lib, "glew32.lib") // recherche automatique de glew32.lib
+//#pragma comment(lib, "glew32.lib") // recherche automatique de glew32.lib
 
 
 // Indique si la distance entre pElem1 et pElem2 est inferieur à theshold
@@ -31,6 +31,17 @@ static bool isContact (Node3D& pElem1, Node3D& pElem2, float threshold)
 static bool isContact (Element3D& pElem1, Element3D& pElem2, float threshold)
 {
 	isContact(*(pElem1.mNode), *(pElem2.mNode), threshold);
+}
+
+static float RandomFloat(float min, float max)
+{
+    assert(max > min); 
+    float random = ((float) rand()) / (float) RAND_MAX;
+
+    // generate() a float between 0 and (4.5-.78)
+    // then add .78, giving you a float between .78 and 4.5
+    float range = max - min;  
+    return (random*range) + min;
 }
 
 int main()
@@ -195,14 +206,9 @@ int main()
 			
 			lLastEnnemyCreation	= lTotalTime_s;
 			BadGuy* badGuy		= new BadGuy(100);
-			int nb_aleatoire = (rand()%100)+1; 
-			int t = (nb_aleatoire * 12 / 100) - 6;
-
-			badGuy->mNode->mPosition_ParentSpace.y = t;//std::rand()%App.GetHeight();
-
-
-			std::cout<<"INCOMING BadGuy!! ( " <<badGuy->mNode->mPosition_ParentSpace.x<<"; "<<badGuy->mNode->mPosition_ParentSpace.y<<")"<<std::endl; 
+			badGuy->mNode->mPosition_ParentSpace.y = RandomFloat(0, App.GetWidth() );
 			badGuy->mNode->mPosition_ParentSpace.x = App.GetWidth() - 1.0f;
+			std::cout<<"INCOMING BadGuy!! ( " <<badGuy->mNode->mPosition_ParentSpace.x<<"; "<<badGuy->mNode->mPosition_ParentSpace.y<<")"<<std::endl;
 			ListBadGuy->push_back(badGuy);
 		}
 
