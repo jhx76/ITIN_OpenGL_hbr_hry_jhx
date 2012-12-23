@@ -202,20 +202,19 @@ int main()
 
 
 			std::cout<<"INCOMING BadGuy!! ( " <<badGuy->mNode->mPosition_ParentSpace.x<<"; "<<badGuy->mNode->mPosition_ParentSpace.y<<")"<<std::endl; 
-			badGuy->mNode->mPosition_ParentSpace.x = App.GetWidth() - 1.0f;
+			badGuy->mNode->mPosition_ParentSpace.x = (App.GetWidth()/100)/* - 1.0f*/;
 			ListBadGuy->push_back(badGuy);
 		}
 
 		//MAJ position tirs
 		for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); )
 		{
-			(*lTir)->update( App.GetFrameTime() );
+			(*lTir)->update(App.GetFrameTime());
 			if((*lTir)->isOutOfGame(App))
 			{
 				std::cout<<"Suppression d'un tir car hors de l'écran"<<std::endl;
 				Tir* ptrTir = *lTir;
-				lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
-												// Si c'est pas le cas, possible fuite mémoire !	
+				lTir = ListMissile->erase(lTir); 
 				if(ptrTir)
 					delete ptrTir;
 			}
@@ -240,41 +239,12 @@ int main()
 				++lBadGuy;
 		}
 
-		// -- TODO TEST collisions
-		/*for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); ) {
-			bool collision = false;
-			Node3D* nodeTir = (*lTir)->mNode;
-			for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); ) {
-				Node3D* nodeBadGuy = (*lBadGuy)->mNode;
-				
-				
-				
-				//Test de collision: Tir / BadGuy
-				//Les deux objets se sont rencontrés, reste maintenant a supprimer le tir et enlever les pv
-				// + test des pv apres avoir décrémenté
-				if(isContact(*nodeTir, *nodeBadGuy, 50)) {
-					collision = true; //Permet de ne pas incrementer l'iterateur de ListTir car l'objet a été supprimé 
-							          //et l'itérateur déja décalé avec l'appel de erase()
-					lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
-													 // Si c'est pas le cas, possible fuite mémoire !	
-					(*lBadGuy)->mLife -= 1; // lors de la collision, on decrement la vie du bad guy !
-					if( !(*lBadGuy)->isAlive() ) {
-						lBadGuy = ListBadGuy->erase(lBadGuy); //meme interrogation sur la gestion memoire du bad guy a supprimer!
-						break; //On sort du parcours de ListBadGuy
-					}
-				}
-
-				lBadGuy++;
-			}
-			if(!collision) //S'il n'y a pas eu de collision, test un autre tir
-				lTir++;
-		}*/
-
+		//Test de collison : Player / BadGuy
 		for (auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); ) {
 			
 			Node3D* nodeBadGuy = (*lBadGuy)->mNode;
-			//Test de collison : Player / BadGuy
-			if(isContact(*nodeBadGuy, *(lPlayer->mNode), 50)) {
+			
+			if(isContact(*nodeBadGuy, *(lPlayer->mNode), 0.5f)) {
 				BadGuy* ptrBadGuy = *lBadGuy;
 				lBadGuy = ListBadGuy->erase(lBadGuy);
 				if(ptrBadGuy)
@@ -337,8 +307,7 @@ int main()
 		}
 		
 		// TODO dessiner les ennemis
-		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); )
-		{
+		for(auto lBadGuy = ListBadGuy->begin(); lBadGuy != ListBadGuy->end(); ) {
 			(*lBadGuy)->draw(); //dessin de l'element
 			lBadGuy++; //décallage de l'itérateur
 		}
