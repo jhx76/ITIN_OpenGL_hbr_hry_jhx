@@ -206,8 +206,9 @@ int main()
 			
 			lLastEnnemyCreation	= lTotalTime_s;
 			BadGuy* badGuy		= new BadGuy(100);
-			badGuy->mNode->mPosition_ParentSpace.y = RandomFloat(0, App.GetWidth() );
-			badGuy->mNode->mPosition_ParentSpace.x = App.GetWidth() - 1.0f;
+			badGuy->mNode->mPosition_ParentSpace.y = RandomFloat( -6.0f , 6.0f );
+
+			badGuy->mNode->mPosition_ParentSpace.x = App.GetWidth() / 100 - 1.0f ;
 			std::cout<<"INCOMING BadGuy!! ( " <<badGuy->mNode->mPosition_ParentSpace.x<<"; "<<badGuy->mNode->mPosition_ParentSpace.y<<")"<<std::endl;
 			ListBadGuy->push_back(badGuy);
 		}
@@ -280,7 +281,7 @@ int main()
 			
 			Node3D* nodeBadGuy = (*lBadGuy)->mNode;
 			//Test de collison : Player / BadGuy
-			if(isContact(*nodeBadGuy, *(lPlayer->mNode), 50)) {
+			if(isContact(*nodeBadGuy, *(lPlayer->mNode), 0.5f)) {
 				BadGuy* ptrBadGuy = *lBadGuy;
 				lBadGuy = ListBadGuy->erase(lBadGuy);
 				if(ptrBadGuy)
@@ -310,7 +311,8 @@ int main()
 						break; //On sort du parcours de ListMissile
 					}
 				}
-				lTir++;
+				else
+					lTir++;
 			}
 			if(!badGuyIsDead) //Si on a deja supprimé le badGuy de la liste, pas besoin de décalé l'itérateur
 				lBadGuy++;    // car l'itérateur a deja été réaffecté par "lBadGuy = ListBadGuy->erase(lBadGuy);"

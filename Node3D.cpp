@@ -26,15 +26,12 @@ glm::mat4x4 Node3D::getTransformation_ParentSpace()
 //==================================================================//
 bool Node3D::isOutOfGame (sf::Window& pWindow)
 {
-	int maxH = pWindow.GetHeight() +15;
-	int maxW = pWindow.GetWidth() +15;
-	int minH = -15;
-	int minW = -15;
-
-	return (mPosition_ParentSpace.x >= maxW
-		|| mPosition_ParentSpace.x <= minW 
-		|| mPosition_ParentSpace.y >= maxH
-		|| mPosition_ParentSpace.y <= minH);
+	int maxH = pWindow.GetHeight() / 100;
+	int maxW = pWindow.GetWidth() / 100;
+	int minH = -(pWindow.GetHeight()/100);
+	int minW = -(pWindow.GetWidth()/100);
+	return (mPosition_ParentSpace.x >= maxW || mPosition_ParentSpace.x <= minW 
+		|| mPosition_ParentSpace.y >= maxH || mPosition_ParentSpace.y <= minH);
 
 }
 //==================================================================//

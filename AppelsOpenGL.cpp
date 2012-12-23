@@ -124,14 +124,14 @@ void AppelsOpenGL::drawBackground(float decallageTotal, GLuint idTexture)
 
 	glBegin(GL_QUADS);
 		glColor4ub(255, 255, 255, 255);
-
 		//Draw our four points, clockwise.
-		glTexCoord2f(0, 0); glVertex3f(-0.5, 0.5, 0);
-		glTexCoord2f(1, 0); glVertex3f(0.5, 0.5, 0);
-		glTexCoord2f(1, 1); glVertex3f(0.5, -0.5, 0);
-		glTexCoord2f(0, 1); glVertex3f(-0.5, -0.5, 0);
+		glTexCoord2f(0, 0); glVertex3f(-0.5, 0.5, 0); //A (-1,1)
+		glTexCoord2f(1, 0); glVertex3f(0.5, 0.5, 0);  //B (1,1)
+		glTexCoord2f(1, 1); glVertex3f(0.5, -0.5, 0); //C (1, -1)
+		glTexCoord2f(0, 1); glVertex3f(-0.5, -0.5, 0); //D (-1, -1)
 	glEnd();
 	glLoadMatrixf( &lBeginMatrix[0][0]);
+	glDisable(GL_TEXTURE_2D);
 }
 
 //------------------------------------------------------------------//
