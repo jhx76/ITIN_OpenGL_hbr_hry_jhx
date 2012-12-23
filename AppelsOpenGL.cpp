@@ -110,6 +110,21 @@ void AppelsOpenGL::dessinerTriangleInfini()
 void AppelsOpenGL::drawBackground(float decallageTotal, GLuint idTexture)
 {
 	//TODO
+	 glOrtho(-1, 1, -1, 1, -1, 1);//Créer une matrice de vue Ortho
+	 glMatrixMode(GL_MODELVIEW);
+	 glLoadIdentity();
+	 glDisable(GL_DEPTH_TEST);
+	 glBegin(GL_QUADS);
+	  //Define the color (blue)
+	  glColor3ub(0, 0, 255);
+
+	  //Draw our four points, clockwise.
+	  glVertex3f(-0.5, 0.5, 0);
+	  glVertex3f(0.5, 0.5, 0);
+	  glVertex3f(0.5, -0.5, 0);
+	  glVertex3f(-0.5, -0.5, 0);
+	glEnd();
+
 }
 
 //------------------------------------------------------------------//
