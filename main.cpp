@@ -97,7 +97,7 @@ int main()
 	glLoadMatrixf(&lProjMatrix[0][0]);
 
 	// TODO charger la texture de background en memoire.
-	// GLuint textureBg = AppelsOpenGL::loadTexture( "../../data/bg.bmp");
+	 GLuint textureBg = AppelsOpenGL::loadTexture( "../../data/bg.bmp");
 
 	// creation de mes elements de la scene.
 	Element3D *lPlayer = new Element3D();
@@ -331,8 +331,8 @@ int main()
 		glLoadMatrixf( &lPointOfView[0][0] );
 		
 		// TODO dessin du fond.
-		//GERER LES ARGUMENTS !!!!
-//		AppelsOpenGL::drawBackground();
+		//GERER LES ARGUMENTS !!!! (durée de jeu pour le scroll du BG, et Gluint de la texture)
+		AppelsOpenGL::drawBackground(lTotalTime_s, textureBg);
 		
 		// dessinons notre objet.
 		lPlayer->draw();

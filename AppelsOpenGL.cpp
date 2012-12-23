@@ -110,28 +110,30 @@ void AppelsOpenGL::dessinerTriangleInfini()
 //------------------------------------------------------------------//
 void AppelsOpenGL::drawBackground(float decallageTotal, GLuint idTexture)
 {
-	auto lBeginMatrix = AppelsOpenGL::obtenirLaMatriceModelViewCourante();
-		
-	//TODO
-	 glOrtho(-1, 1, -1, 1, -1, 1);//Créer une matrice de vue Ortho
-	 glMatrixMode(GL_MODELVIEW);
-	 glLoadIdentity();
-	 glDisable(GL_DEPTH_TEST);
-	 
-	//Enable texturing on all models for now on.
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, idTexture);
+		glClearColor(0.0,0.0,0.0,0.0);
+		glBindTexture( GL_TEXTURE_2D, idTexture );
+		glEnable(GL_TEXTURE_2D);
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glOrtho( 5, -5, 5, -5, 3, 500 );        
+		glLoadIdentity();
 
-	glBegin(GL_QUADS);
-		glColor4ub(255, 255, 255, 255);
-		//Draw our four points, clockwise.
-		glTexCoord2f(0, 0); glVertex3f(-0.5, 0.5, 0); //A (-1,1)
-		glTexCoord2f(1, 0); glVertex3f(0.5, 0.5, 0);  //B (1,1)
-		glTexCoord2f(1, 1); glVertex3f(0.5, -0.5, 0); //C (1, -1)
-		glTexCoord2f(0, 1); glVertex3f(-0.5, -0.5, 0); //D (-1, -1)
-	glEnd();
-	glLoadMatrixf( &lBeginMatrix[0][0]);
-	glDisable(GL_TEXTURE_2D);
+		glBegin( GL_QUADS ); 
+		{
+				glTexCoord2f(decallageTotal+1,1);
+				glVertex3f( 6.0f, 5.0f, 0.0f);
+				glTexCoord2f(decallageTotal+0,1);
+				glVertex3f(-6.0f, 5.0f, 0.0f);
+				glTexCoord2f(decallageTotal+0,0);
+				glVertex3f(-6.0f,-5.0f,0.0f);
+				glTexCoord2f(decallageTotal+1,0);
+				glVertex3f( 6.0f,-5.0f,0.0f);
+		}
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+
+		glPopMatrix();
+		glMatrixMode(GL_PROJECTION);
 }
 
 //------------------------------------------------------------------//
