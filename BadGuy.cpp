@@ -13,7 +13,6 @@ BadGuy::BadGuy(float life) : Element3D()
 
 void BadGuy::draw()
 {
-	std::cout << "drawing BadGuy !" << std::endl;
 	// 1/ recuperer la matrice courante.
 	// 2/ recuperer la matrice dans le repere parent.
 	// 3/ multiplier les deux, charger le resultat dans opengl

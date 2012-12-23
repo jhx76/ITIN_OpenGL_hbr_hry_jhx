@@ -47,6 +47,5 @@ bool Tir::isOutOfGame (sf::Window& pWindow) {
 		|| mNode->mPosition_ParentSpace.y >= maxH
 		|| mNode->mPosition_ParentSpace.y <= minH);
 	*/
-	std::cout << "isoutofgame ? " << (mNode->isOutOfGame(pWindow) ? "true" : "false") << std::endl;
 	return mNode->isOutOfGame(pWindow);
 }

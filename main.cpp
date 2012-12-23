@@ -200,8 +200,6 @@ int main()
 
 			badGuy->mNode->mPosition_ParentSpace.y = t;//std::rand()%App.GetHeight();
 
-
-			std::cout<<"INCOMING BadGuy!! ( " <<badGuy->mNode->mPosition_ParentSpace.x<<"; "<<badGuy->mNode->mPosition_ParentSpace.y<<")"<<std::endl; 
 			badGuy->mNode->mPosition_ParentSpace.x = (App.GetWidth()/100)/* - 1.0f*/;
 			ListBadGuy->push_back(badGuy);
 		}
@@ -230,6 +228,7 @@ int main()
 			(*lBadGuy)->update(App.GetFrameTime());
 			if( (*lBadGuy)->isOutOfGame(App) ) 
 			{
+				std::cout << "Suppression d'un ennemi car hors de l'écran" << std::endl;
 				BadGuy* ptrBadGuy = *lBadGuy;
 				lBadGuy = ListBadGuy->erase(lBadGuy);
 				if(ptrBadGuy) 
@@ -254,15 +253,17 @@ int main()
 
 			//Test de collison : Tir / BadGuy
 			bool badGuyIsDead = false;
+			bool tirDeleted = false;
 			for(auto lTir = ListMissile->begin(); lTir != ListMissile->end(); ) {
 				Node3D* nodeTir = (*lTir)->mNode;
 				if(isContact(*nodeTir, *nodeBadGuy, 0.5f)) {
 					
 					Tir* ptrTir = *lTir;
-					lTir = ListMissile->erase(lTir); //appel du destructeur de l'objet enlevé de la liste ???
-													 // Si c'est pas le cas, possible fuite mémoire !
+					lTir = ListMissile->erase(lTir);
 					if(ptrTir)
 						delete ptrTir;
+					tirDeleted = true;
+
 					(*lBadGuy)->mLife -= 1; // lors de la collision, on decrement la vie du bad guy !
 					if( !(*lBadGuy)->isAlive() ) {
 						BadGuy* ptrBadGuy = *lBadGuy;
@@ -274,7 +275,8 @@ int main()
 						break; //On sort du parcours de ListMissile
 					}
 				}
-				lTir++;
+				else
+					lTir++;
 			}
 			if(!badGuyIsDead) //Si on a deja supprimé le badGuy de la liste, pas besoin de décalé l'itérateur
 				lBadGuy++;    // car l'itérateur a deja été réaffecté par "lBadGuy = ListBadGuy->erase(lBadGuy);"
