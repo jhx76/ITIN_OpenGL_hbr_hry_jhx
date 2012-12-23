@@ -11,7 +11,7 @@
 // si vous avez des problemes de linker avec glewinit :
 // error LNK2019: symbole externe non résolu __imp__glewInit référencé dans la fonction _main
 // alors commentez/décommentez cette ligne.
-#pragma comment(lib, "glew32.lib") // recherche automatique de glew32.lib
+//#pragma comment(lib, "glew32.lib") // recherche automatique de glew32.lib
 
 
 // Indique si la distance entre pElem1 et pElem2 est inferieur à theshold
@@ -32,6 +32,10 @@ static bool isContact (Element3D& pElem1, Element3D& pElem2, float threshold)
 {
 	isContact(*(pElem1.mNode), *(pElem2.mNode), threshold);
 }
+
+
+
+
 
 int main()
 {	
@@ -86,7 +90,7 @@ int main()
 	glLoadMatrixf(&lProjMatrix[0][0]);
 
 	// TODO charger la texture de background en memoire.
-	// GLuint textureBg = AppelsOpenGL::loadTexture( "../../data/bg.bmp");
+	GLuint textureBg = AppelsOpenGL::loadTexture( "../../data/bg.bmp");
 
 	// creation de mes elements de la scene.
 	Element3D *lPlayer = new Element3D();
@@ -197,7 +201,6 @@ int main()
 			BadGuy* badGuy		= new BadGuy(100);
 			int nb_aleatoire = (rand()%100)+1; 
 			int t = (nb_aleatoire * 12 / 100) - 6;
-
 			badGuy->mNode->mPosition_ParentSpace.y = t;//std::rand()%App.GetHeight();
 
 			badGuy->mNode->mPosition_ParentSpace.x = (App.GetWidth()/100)/* - 1.0f*/;
