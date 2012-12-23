@@ -93,8 +93,9 @@ void AppelsOpenGL::dessinerTir(glm::vec4 parametresQuelconques)
 		glVertex2d(-0.10f,0.10f);//B		
     glEnd();*/
 	glBegin(GL_LINES);
-		glColor3ub(255,255,255);
+		glColor3ub(255,0,0);
 		glVertex2d(1.0f, 0);
+		glColor3ub(0,0,255);
 		glVertex2d(0, 0);
 		
 
@@ -109,22 +110,28 @@ void AppelsOpenGL::dessinerTriangleInfini()
 //------------------------------------------------------------------//
 void AppelsOpenGL::drawBackground(float decallageTotal, GLuint idTexture)
 {
+	auto lBeginMatrix = AppelsOpenGL::obtenirLaMatriceModelViewCourante();
+		
 	//TODO
 	 glOrtho(-1, 1, -1, 1, -1, 1);//Créer une matrice de vue Ortho
 	 glMatrixMode(GL_MODELVIEW);
 	 glLoadIdentity();
 	 glDisable(GL_DEPTH_TEST);
-	 glBegin(GL_QUADS);
-	  //Define the color (blue)
-	  glColor3ub(0, 0, 255);
+	 
+	//Enable texturing on all models for now on.
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, idTexture);
 
-	  //Draw our four points, clockwise.
-	  glVertex3f(-0.5, 0.5, 0);
-	  glVertex3f(0.5, 0.5, 0);
-	  glVertex3f(0.5, -0.5, 0);
-	  glVertex3f(-0.5, -0.5, 0);
+	glBegin(GL_QUADS);
+		glColor4ub(255, 255, 255, 255);
+
+		//Draw our four points, clockwise.
+		glTexCoord2f(0, 0); glVertex3f(-0.5, 0.5, 0);
+		glTexCoord2f(1, 0); glVertex3f(0.5, 0.5, 0);
+		glTexCoord2f(1, 1); glVertex3f(0.5, -0.5, 0);
+		glTexCoord2f(0, 1); glVertex3f(-0.5, -0.5, 0);
 	glEnd();
-
+	glLoadMatrixf( &lBeginMatrix[0][0]);
 }
 
 //------------------------------------------------------------------//
@@ -136,8 +143,26 @@ GLuint AppelsOpenGL::loadTexture(std::string pNameFile)
 	// 2. creer la texture avec les bons parametres
 	// 3. renvoie l'identifiant de la texture cree.
 
-	MBOX("pas de chargement implemente pour "<<pNameFile);
+
+	/*
+	if(fileExists(pNameFile))
+		return loadTexture("ma_texture.jpg");
+	MBOX("file not found: "<<pNameFile);
 	return 0;
+	*/
+	GLuint texture;
+
+	sf::Image img;
+	if(!img.LoadFromFile(pNameFile)) {
+		MBOX("pas de chargement implemente pour "<<pNameFile);
+		return 0;
+	}	
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, img.GetWidth(), img.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.GetPixelsPtr());
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	return texture;
 }
 
 //------------------------------------------------------------------//
@@ -146,3 +171,13 @@ void AppelsOpenGL::dessinerEnnemi()
 	//TODO
 }
 //------------------------------------------------------------------//
+bool AppelsOpenGL::fileExists(const std::string& filename)
+{
+    struct stat buf;
+    if (stat(filename.c_str(), &buf) != -1)
+    {
+        return true;
+    }
+    return false;
+}
+

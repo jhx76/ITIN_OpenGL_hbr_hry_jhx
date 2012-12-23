@@ -3,6 +3,7 @@
 
 #include "CommonDefines.h"
 #include <string>
+#include <sys/stat.h>
 #include <glm/glm.hpp>
 
 // ce fichier contient des fonctions statiques,
@@ -13,7 +14,6 @@
 class AppelsOpenGL
 {
 public:
-
 	/// fonction d'aide si vous souhaitez connaitre
 	/// la matrice modelview courante.
 	static glm::mat4 obtenirLaMatriceModelViewCourante();
@@ -82,6 +82,9 @@ public:
 	/// remarque : vous pouvez ajouter les parametres supplementaires que vous voulez,
 	///   cependant il n'y a besoin de rien de plus pour repondre correctement.
 	static void dessinerEnnemi();
+
+	static bool fileExists(const std::string& filename);
+
 };
 
 
